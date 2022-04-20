@@ -1,7 +1,6 @@
 package com.juan.estevez.app.service;
 
 import java.util.Optional;
-
 import com.juan.estevez.app.model.Product;
 
 public interface ProductService {
@@ -9,7 +8,7 @@ public interface ProductService {
 	/**
 	 * Inserta un producto en la base de datos.
 	 * 
-	 * @param product a inssertar.
+	 * @param product a insertar.
 	 * @return producto insertado.
 	 */
 	public Product save(Product product);
