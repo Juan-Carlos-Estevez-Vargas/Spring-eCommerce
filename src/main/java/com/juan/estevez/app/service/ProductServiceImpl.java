@@ -6,9 +6,15 @@ import org.springframework.stereotype.Service;
 import com.juan.estevez.app.model.Product;
 import com.juan.estevez.app.repository.IProductRepository;
 
+/**
+ * Servico encargado de realizar las operaciones SQL del tipo Producto.
+ * 
+ * @author Juan Carlos Estevez Vargas.
+ *
+ */
 @Service
-public class ProductServiceImpl implements ProductService{
-	
+public class ProductServiceImpl implements ProductService {
+
 	@Autowired
 	private IProductRepository productRepository;
 
@@ -20,7 +26,7 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public Optional<Product> get(Integer id) {
 		return productRepository.findById(id);
-	}	
+	}
 
 	@Override
 	public void update(Product product) {
