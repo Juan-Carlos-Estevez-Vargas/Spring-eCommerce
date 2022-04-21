@@ -1,5 +1,6 @@
 package com.juan.estevez.app.service;
 
+import java.util.List;
 import java.util.Optional;
 import com.juan.estevez.app.model.Product;
 
@@ -34,5 +35,12 @@ public interface ProductService {
 	 * @param id por el cuál se eliminará el producto.
 	 */
 	public void delete(Integer id);
+
+	/**
+	 * Busca todos los productos existentes en el sistema.
+	 * 
+	 * @return lista con los productos encontrados.
+	 */
+	public List<Product> findAll();
 
 }

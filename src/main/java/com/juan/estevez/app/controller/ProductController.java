@@ -4,13 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.juan.estevez.app.model.Product;
 import com.juan.estevez.app.model.User;
-import com.juan.estevez.app.repository.IProductRepository;
 import com.juan.estevez.app.service.ProductService;
 
 /**
@@ -34,7 +34,8 @@ public class ProductController {
 	 * @return vista don los productos encontrados.
 	 */
 	@GetMapping("")
-	public String show() {
+	public String show(Model model) {
+		model.addAttribute("products", productService.findAll());
 		return "products/show";
 	}
 
