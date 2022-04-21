@@ -2,12 +2,16 @@ package com.juan.estevez.app.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.juan.estevez.app.model.Product;
+import com.juan.estevez.app.model.User;
+import com.juan.estevez.app.repository.IProductRepository;
+import com.juan.estevez.app.service.ProductService;
 
 /**
  * Controlador de tipo producto.
@@ -20,6 +24,9 @@ import com.juan.estevez.app.model.Product;
 public class ProductController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+	
+	@Autowired
+	private ProductService productService;
 
 	/**
 	 * Muestra la lista de productos almacenados en la base de datos.
@@ -52,6 +59,9 @@ public class ProductController {
 	@PostMapping("/save")
 	public String save(Product product) {
 		LOGGER.info("objeto de producto {}", product.toString());
+		User user = new User(1, "", "", "", "", "", "", "");
+		product.setUser(user);
+		productService.save(product);
 		return "redirect:/products";
 	}
 
