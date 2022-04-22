@@ -40,7 +40,7 @@ public class UploadFileService {
 	/**
 	 * Elimina una imagen del proyecto.
 	 * 
-	 * @param name de la imagen a eliminar.
+	 * @param name de la imagen a eliminar.	
 	 */
 	public void deleteImage(String name) {
 		String route = "images//";
