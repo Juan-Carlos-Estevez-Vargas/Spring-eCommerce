@@ -27,7 +27,7 @@ import com.juan.estevez.app.service.ProductService;
 public class ProductController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
-	
+
 	@Autowired
 	private ProductService productService;
 
@@ -68,7 +68,14 @@ public class ProductController {
 		productService.save(product);
 		return "redirect:/products";
 	}
-	
+
+	/**
+	 * Obtiene un producto a editar en el sistema.
+	 * 
+	 * @param id    por el cuál se buscará el producto.
+	 * @param model
+	 * @return vista html para editar el producto.
+	 */
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable Integer id, Model model) {
 		Product product = new Product();
@@ -78,11 +85,28 @@ public class ProductController {
 		model.addAttribute("product", product);
 		return "products/edit";
 	}
-	
+
+	/**
+	 * Actualiza un producto en la base de datos.
+	 * 
+	 * @param product a actualizar.
+	 * @return redirección a la vista donde se listan los productos.
+	 */
 	@PostMapping("/update")
 	public String update(Product product) {
 		productService.update(product);
 		return "redirect:/products";
 	}
 
+	/**
+	 * Se encarga de eliminar un producto del sistema.
+	 * 
+	 * @param id por el cuál se eliminará el producto.
+	 * @return redirección a la vista donde se listan los productos.
+	 */
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable Integer id) {
+		productService.delete(id);
+		return "redirect:/products";
+	}
 }
