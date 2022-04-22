@@ -115,7 +115,7 @@ public class ProductController {
 
 		Product p = new Product();
 		p = productService.get(product.getId()).get();
-		
+
 		/**
 		 * Cuando editamos el producto pero no cambiamos la imagen.
 		 */
