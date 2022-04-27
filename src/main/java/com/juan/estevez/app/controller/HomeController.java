@@ -1,5 +1,7 @@
 package com.juan.estevez.app.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.juan.estevez.app.model.Order;
+import com.juan.estevez.app.model.OrderDetail;
 import com.juan.estevez.app.model.Product;
 import com.juan.estevez.app.service.ProductService;
 
@@ -20,6 +25,8 @@ import com.juan.estevez.app.service.ProductService;
 public class HomeController {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+	List<OrderDetail> details = new ArrayList<OrderDetail>();
+	Order order = new Order();
 	
 	@Autowired
 	private ProductService productService;
@@ -41,7 +48,11 @@ public class HomeController {
 	}
 	
 	@PostMapping("/cart")
-	public String addCart() {
+	public String addCart(@RequestParam Integer id, @RequestParam Integer cant) {
+		OrderDetail orderDetail = new OrderDetail();
+		Product product = new Product();
+		double totalSum = 0;
+		Optional<Product> optionalProduct = productService.get(id);
 		return "user/carrito";
 	}
 	
