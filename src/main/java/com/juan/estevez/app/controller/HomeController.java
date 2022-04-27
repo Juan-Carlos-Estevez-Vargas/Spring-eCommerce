@@ -48,11 +48,20 @@ public class HomeController {
 	}
 	
 	@PostMapping("/cart")
-	public String addCart(@RequestParam Integer id, @RequestParam Integer cant) {
+	public String addCart(@RequestParam Integer id, @RequestParam Integer cant, Model model) {
 		OrderDetail orderDetail = new OrderDetail();
 		Product product = new Product();
 		double totalSum = 0;
 		Optional<Product> optionalProduct = productService.get(id);
+		product = optionalProduct.get(); 
+		orderDetail.setCant(cant);
+		orderDetail.setPrice(product.getPrice()*cant);
+		orderDetail.setName(product.getName());
+		orderDetail.setProduct(product);
+		totalSum=details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+		order.setTotal(totalSum);
+		model.addAttribute("cart",details);
+		model.addAttribute("order", order);
 		return "user/carrito";
 	}
 	
