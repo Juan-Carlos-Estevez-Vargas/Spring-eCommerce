@@ -23,20 +23,20 @@ import com.juan.estevez.app.service.ProductService;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-	
+
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 	List<OrderDetail> details = new ArrayList<OrderDetail>();
 	Order order = new Order();
-	
+
 	@Autowired
 	private ProductService productService;
-	
+
 	@GetMapping("")
 	public String Home(Model model) {
 		model.addAttribute("products", productService.findAll());
 		return "user/home";
 	}
-	
+
 	@GetMapping("productHome/{id}")
 	public String productHome(@PathVariable Integer id, Model model) {
 		LOGGER.info("Id del producto como parámetro {}", id);
@@ -46,23 +46,29 @@ public class HomeController {
 		model.addAttribute("product", product);
 		return "user/productHome";
 	}
-	
+
 	@PostMapping("/cart")
 	public String addCart(@RequestParam Integer id, @RequestParam Integer cant, Model model) {
 		OrderDetail orderDetail = new OrderDetail();
 		Product product = new Product();
 		double totalSum = 0;
 		Optional<Product> optionalProduct = productService.get(id);
-		product = optionalProduct.get(); 
+		
+		product = optionalProduct.get();
+		
 		orderDetail.setCant(cant);
-		orderDetail.setPrice(product.getPrice()*cant);
+		orderDetail.setPrice(product.getPrice());
+		orderDetail.setTotal(product.getPrice() * cant);
 		orderDetail.setName(product.getName());
 		orderDetail.setProduct(product);
-		totalSum=details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+		
+		details.add(orderDetail);
+		totalSum = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
 		order.setTotal(totalSum);
-		model.addAttribute("cart",details);
+		model.addAttribute("cart", details);
 		model.addAttribute("order", order);
+		
 		return "user/carrito";
 	}
-	
+
 }

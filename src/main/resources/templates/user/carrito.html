@@ -58,9 +58,9 @@
 							</thead>
 							<tbody>
 								<tr th:each="detailOrder:${cart}">
-									<td th:text="${detailOrder.nombre}"></td>
-									<td th:text="${detailOrder.precio}"></td>
-									<td th:text="${detailOrder.cantidad}"></td>
+									<td th:text="${detailOrder.name}"></td>
+									<td th:text="${detailOrder.price}"></td>
+									<td th:text="${detailOrder.cant}"></td>
 									<td th:text="${detailOrder.total}"></td>
 									<td><a th:href="@{/delete/cart/{id}   (id=${detailOrder.product.id}) }" class="btn btn-danger">Quitar</a></td>
 								</tr>
