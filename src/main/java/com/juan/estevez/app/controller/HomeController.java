@@ -105,4 +105,9 @@ public class HomeController {
 		model.addAttribute("order", order);
 		return "/user/carrito";
 	}
+	
+	@GetMapping("/order")
+	public String order() {
+		return "user/resumenorden";
+	}
 }
