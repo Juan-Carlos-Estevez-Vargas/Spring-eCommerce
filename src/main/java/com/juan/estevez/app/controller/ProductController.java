@@ -3,8 +3,6 @@ package com.juan.estevez.app.controller;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +27,6 @@ import com.juan.estevez.app.service.UploadFileService;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-
-	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired
 	private UploadFileService uploadFileService;
@@ -69,18 +65,10 @@ public class ProductController {
 	 * @throws IOException
 	 */
 	@PostMapping("/save")
-	public String save(Product product, @RequestParam("img") MultipartFile file) throws IOException {
-		LOGGER.info("objeto de producto {}", product.toString());
+	public String save(Product product) throws IOException {
 		User user = new User(1, "", "", "", "", "", "", "");
 		product.setUser(user);
 
-		/**
-		 * Cuando se crea un nuevo producto.
-		 */
-		if (product.getId() == null) {
-			String nameImg = uploadFileService.saveImage(file);
-			product.setImg(nameImg);
-		}
 
 		productService.save(product);
 		return "redirect:/products";
@@ -98,7 +86,6 @@ public class ProductController {
 		Product product = new Product();
 		Optional<Product> optionalProduct = productService.get(id);
 		product = optionalProduct.get();
-		LOGGER.info("Producto buscado: {}", product);
 		model.addAttribute("product", product);
 		return "products/edit";
 	}

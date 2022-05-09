@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +22,7 @@ import com.juan.estevez.app.service.ProductService;
 @RequestMapping("/")
 public class HomeController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
-	List<OrderDetail> details = new ArrayList<OrderDetail>();
+	List<OrderDetail> details = new ArrayList<>();
 	Order order = new Order();
 
 	@Autowired
@@ -39,7 +36,6 @@ public class HomeController {
 
 	@GetMapping("productHome/{id}")
 	public String productHome(@PathVariable Integer id, Model model) {
-		LOGGER.info("Id del producto como parámetro {}", id);
 		Product product = new Product();
 		Optional<Product> productOptional = productService.get(id);
 		product = productOptional.get();
@@ -52,8 +48,8 @@ public class HomeController {
 		OrderDetail orderDetail = new OrderDetail();
 		Product product = new Product();
 		double totalSum = 0;
-		Optional<Product> optionalProduct = productService.get(id);
 		
+		Optional<Product> optionalProduct = productService.get(id);
 		product = optionalProduct.get();
 		
 		orderDetail.setCant(cant);
@@ -62,8 +58,18 @@ public class HomeController {
 		orderDetail.setName(product.getName());
 		orderDetail.setProduct(product);
 		
-		details.add(orderDetail);
+		/**
+		 * Validar que el producto no se añada mas de una vez.
+		 */
+		Integer idProducto = product.getId();
+		boolean ingresado = details.stream().anyMatch(p -> p.getProduct().getId() == idProducto);
+		
+		if (!ingresado) {
+			details.add(orderDetail);
+		}
+		
 		totalSum = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+		
 		order.setTotal(totalSum);
 		model.addAttribute("cart", details);
 		model.addAttribute("order", order);
@@ -73,7 +79,7 @@ public class HomeController {
 
 	@GetMapping("/delete/cart/{id}")
 	public String deleteProductoCart(@PathVariable Integer id, Model model) {
-		List<OrderDetail> newOrders = new ArrayList<OrderDetail>();
+		List<OrderDetail> newOrders = new ArrayList<>();
 		
 		for (OrderDetail orderDetail : details) {
 			if (orderDetail.getProduct().getId() != id) {
@@ -85,10 +91,18 @@ public class HomeController {
 		
 		double totalSum = 0;
 		totalSum = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+		
 		order.setTotal(totalSum);
 		model.addAttribute("cart", details);
 		model.addAttribute("order", order);
 		
 		return "user/carrito";
+	}
+	
+	@GetMapping("/getCart")
+	public String getCart(Model model) {
+		model.addAttribute("cart", details);
+		model.addAttribute("order", order);
+		return "/user/carrito";
 	}
 }
