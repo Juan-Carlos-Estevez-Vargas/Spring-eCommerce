@@ -1,6 +1,7 @@
 package com.juan.estevez.app.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.juan.estevez.app.model.Order;
 import com.juan.estevez.app.model.OrderDetail;
 import com.juan.estevez.app.model.Product;
+import com.juan.estevez.app.service.IOrderDetailService;
+import com.juan.estevez.app.service.IOrderService;
 import com.juan.estevez.app.service.ProductService;
 
 @Controller
@@ -27,6 +30,12 @@ public class HomeController {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private IOrderService orderService;
+	
+	@Autowired
+	private IOrderDetailService orderDetailService;
 
 	@GetMapping("")
 	public String Home(Model model) {
@@ -109,5 +118,29 @@ public class HomeController {
 	@GetMapping("/order")
 	public String order() {
 		return "user/resumenorden";
+	}
+	
+	@GetMapping("/saveOrder")
+	public String saveOrder() {
+		Date creationDate = new Date();
+		order.setCreationDate(creationDate);
+		order.setNumber(orderService.generateOrderNumber(10000));
+		 
+		//usuario
+		//Usuario user = usuarioService.findById(1).get();
+		//order.setUser(user);
+		orderService.save(order);
+		
+		//guardando detalles
+		for(OrderDetail dt: details) {
+			dt.setOrder(order);
+			orderDetailService.save(dt);
+		}
+		
+		//limpiar detalle lista y orden
+		order = new Order();
+		details.clear();
+		
+		return "redirect:/";
 	}
 }

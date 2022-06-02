@@ -25,6 +25,7 @@ public class OrderServiceImpl implements IOrderService {
 		return orderRepository.findAll();
 	}
 
+	@Override
 	public String generateOrderNumber(int num) {
 		String numeroOrden = String.valueOf(num);
 		int numDigitos = numeroOrden.length(); // numero de digitos
