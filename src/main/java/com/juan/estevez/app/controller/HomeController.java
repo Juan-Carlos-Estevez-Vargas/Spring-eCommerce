@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -142,5 +143,12 @@ public class HomeController {
 		details.clear();
 		
 		return "redirect:/";
+	}
+	
+	@PostMapping("/search")
+	public String searchProduct(@RequestParam String nombre, Model model) {
+		List<Product> products = productService.findAll().stream().filter(p -> p.getName().contains(nombre.toLowerCase())).collect(Collectors.toList());
+		model.addAttribute("productos", products);
+		return "user/home";
 	}
 }
