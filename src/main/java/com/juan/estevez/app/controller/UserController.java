@@ -1,5 +1,9 @@
 package com.juan.estevez.app.controller;
 
+import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,5 +35,21 @@ public class UserController {
 	@GetMapping("/login")
 	public String login() {
 		return "user/login";
+	}
+	
+	@PostMapping("/acceder")
+	public String acceder(User user, HttpSession session) {
+		Optional<User> usuario = userService.findByEmail(user.getEmail());
+		
+		if(usuario.isPresent()) {
+			session.setAttribute("idusuario", usuario.get().getId());
+			if(usuario.get().getType().equals("ADMIN")) {
+				return "redirect:/administrator";
+			}else {
+				return "redirect:/";
+			}
+		}
+		
+		return "redirect:/";
 	}
 }
