@@ -3,6 +3,8 @@ package com.juan.estevez.app.controller;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.juan.estevez.app.model.Product;
 import com.juan.estevez.app.model.User;
+import com.juan.estevez.app.service.IUserService;
 import com.juan.estevez.app.service.ProductService;
 import com.juan.estevez.app.service.UploadFileService;
 
@@ -33,6 +36,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private IUserService usuarioService;
 
 	/**
 	 * Muestra la lista de productos almacenados en la base de datos.
@@ -65,10 +71,14 @@ public class ProductController {
 	 * @throws IOException
 	 */
 	@PostMapping("/save")
-	public String save(Product product) throws IOException {
-		User user = new User(1, "", "", "", "", "", "", "");
+	public String save(Product product, @RequestParam("img") MultipartFile file, HttpSession session) throws IOException {
+		User user = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
 		product.setUser(user);
 
+		if(product.getId()==null) {
+			String nombreImagen = uploadFileService.saveImage(file);
+			product.setImg(nombreImagen);
+		}
 
 		productService.save(product);
 		return "redirect:/products";

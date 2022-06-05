@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.juan.estevez.app.model.Order;
 import com.juan.estevez.app.model.OrderDetail;
 import com.juan.estevez.app.model.Product;
+import com.juan.estevez.app.model.User;
 import com.juan.estevez.app.service.IOrderDetailService;
 import com.juan.estevez.app.service.IOrderService;
+import com.juan.estevez.app.service.IUserService;
 import com.juan.estevez.app.service.ProductService;
+
 
 @Controller
 @RequestMapping("/")
@@ -37,9 +42,12 @@ public class HomeController {
 	
 	@Autowired
 	private IOrderDetailService orderDetailService;
+	
+	@Autowired 
+	private IUserService userService;
 
 	@GetMapping("")
-	public String Home(Model model) {
+	public String Home(Model model, HttpSession session) {
 		model.addAttribute("products", productService.findAll());
 		return "user/home";
 	}
@@ -117,19 +125,24 @@ public class HomeController {
 	}
 	
 	@GetMapping("/order")
-	public String order() {
+	public String order(Model model, HttpSession session) {
+		User user = userService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+		
+		model.addAttribute("cart", details);
+		model.addAttribute("orden", order);
+		model.addAttribute("usuario", user);
+		
 		return "user/resumenorden";
 	}
 	
 	@GetMapping("/saveOrder")
-	public String saveOrder() {
+	public String saveOrder(HttpSession session) {
 		Date creationDate = new Date();
 		order.setCreationDate(creationDate);
 		order.setNumber(orderService.generateOrderNumber(10000));
 		 
-		//usuario
-		//Usuario user = usuarioService.findById(1).get();
-		//order.setUser(user);
+		User user = (User) userService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+		order.setUser(user);
 		orderService.save(order);
 		
 		//guardando detalles
@@ -147,7 +160,7 @@ public class HomeController {
 	
 	@PostMapping("/search")
 	public String searchProduct(@RequestParam String nombre, Model model) {
-		List<Product> products = productService.findAll().stream().filter(p -> p.getName().contains(nombre.toLowerCase())).collect(Collectors.toList());
+		List<Product> products = productService.findAll().stream().filter(p -> p.getName().contains(nombre.toLowerCase() )).collect(Collectors.toList());
 		model.addAttribute("productos", products);
 		return "user/home";
 	}
