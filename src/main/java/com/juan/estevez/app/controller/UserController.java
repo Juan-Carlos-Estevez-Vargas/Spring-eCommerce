@@ -1,5 +1,6 @@
 package com.juan.estevez.app.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.juan.estevez.app.model.Order;
 import com.juan.estevez.app.model.User;
+import com.juan.estevez.app.service.IOrderService;
 import com.juan.estevez.app.service.IUserService;
 
 @Controller
@@ -20,6 +23,9 @@ public class UserController {
 
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IOrderService orderService;
 	
 	@GetMapping("/registration")
 	public String create() {
@@ -57,6 +63,9 @@ public class UserController {
 	@GetMapping("/compra")
 	public String obtenerCompras(HttpSession session, Model model) {
 		model.addAttribute("sesion", session.getAttribute("idusuario"));
+		User user = userService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+		List<Order> orders = orderService.findByUser(user);
+		model.addAttribute("ordenes", orders);
 		return "user/compras";
 	}
 }

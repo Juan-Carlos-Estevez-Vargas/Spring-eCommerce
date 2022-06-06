@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.juan.estevez.app.model.Order;
+import com.juan.estevez.app.model.User;
 import com.juan.estevez.app.repository.IOrderRepository;
 
 @Service
@@ -21,7 +22,6 @@ public class OrderServiceImpl implements IOrderService {
 
 	@Override
 	public List<Order> findAll() {
-
 		return orderRepository.findAll();
 	}
 
@@ -33,6 +33,11 @@ public class OrderServiceImpl implements IOrderService {
 			numeroOrden = "0" + numeroOrden;
 
 		return numeroOrden;
+	}
+
+	@Override
+	public List<Order> findByUser(User user) {
+		return orderRepository.findByUser(user);
 	}
 
 }

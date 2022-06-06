@@ -1,12 +1,14 @@
 package com.juan.estevez.app.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -25,8 +27,8 @@ public class Order {
 	@ManyToOne
 	private User user;
 	
-	@OneToOne(mappedBy = "order")
-	private OrderDetail detail;
+	@OneToMany(mappedBy = "order")
+	private List<OrderDetail> detail;
 
 	public Order() {
 	}
@@ -89,11 +91,11 @@ public class Order {
 	}
 
 	public OrderDetail getDetail() {
-		return detail;
+		return (OrderDetail) detail;
 	}
 
 	public void setDetail(OrderDetail detail) {
-		this.detail = detail;
+		this.detail = (List<OrderDetail>) detail;
 	}
 
 	@Override
