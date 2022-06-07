@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.juan.estevez.app.model.Product;
+import com.juan.estevez.app.service.IOrderService;
 import com.juan.estevez.app.service.IUserService;
 import com.juan.estevez.app.service.ProductService;
 
@@ -27,6 +28,9 @@ public class AdministratorController {
 	
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IOrderService orderService;
 
 	/***
 	 * Muestra la página principal del aplicativo.
@@ -46,4 +50,9 @@ public class AdministratorController {
 		return "administrator/usuarios";
 	}
 
+	@GetMapping("/ordenes")
+	public String ordenes(Model model) {
+		model.addAttribute("ordenes", orderService.findAll());
+		return "administrador/ordenes";
+	}
 }
