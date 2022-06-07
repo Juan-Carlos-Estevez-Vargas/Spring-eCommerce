@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.juan.estevez.app.model.Product;
+import com.juan.estevez.app.service.IUserService;
 import com.juan.estevez.app.service.ProductService;
 
 /**
@@ -23,6 +24,9 @@ public class AdministratorController {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private IUserService userService;
 
 	/***
 	 * Muestra la página principal del aplicativo.
@@ -34,6 +38,12 @@ public class AdministratorController {
 		List<Product> products = productService.findAll();
 		model.addAttribute("products", products);
 		return "administrator/home";
+	}
+	
+	@GetMapping("/usuarios")
+	public String usuarios(Model model) {
+		model.addAttribute("usuarios", userService.findAll());
+		return "administrator/usuarios";
 	}
 
 }
