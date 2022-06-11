@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.juan.estevez.app.model.Order;
 import com.juan.estevez.app.model.Product;
 import com.juan.estevez.app.service.IOrderService;
 import com.juan.estevez.app.service.IUserService;
@@ -54,5 +56,12 @@ public class AdministratorController {
 	public String ordenes(Model model) {
 		model.addAttribute("ordenes", orderService.findAll());
 		return "administrador/ordenes";
+	}
+	
+	@GetMapping("/detalle{id}")
+	public String detalle(Model model, @PathVariable Integer id) {
+		Order order = orderService.findById(id).get();
+		model.addAttribute("detalles", order.getDetail());
+		return "/administrator/detalleorden";
 	}
 }
