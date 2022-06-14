@@ -5,9 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.juan.estevez.app.model.Order;
 import com.juan.estevez.app.model.OrderDetail;
 import com.juan.estevez.app.model.Product;
@@ -25,7 +22,6 @@ import com.juan.estevez.app.service.IOrderDetailService;
 import com.juan.estevez.app.service.IOrderService;
 import com.juan.estevez.app.service.IUserService;
 import com.juan.estevez.app.service.ProductService;
-
 
 @Controller
 @RequestMapping("/")
@@ -49,7 +45,7 @@ public class HomeController {
 	@GetMapping("")
 	public String Home(Model model, HttpSession session) {
 		model.addAttribute("products", productService.findAll());
-		model.addAttribute("sesion", session.getAttribute("idusuario"));
+		model.addAttribute("session", session.getAttribute("iduser"));
 		return "user/home";
 	}
 
@@ -80,10 +76,10 @@ public class HomeController {
 		/**
 		 * Validar que el producto no se añada mas de una vez.
 		 */
-		Integer idProducto = product.getId();
-		boolean ingresado = details.stream().anyMatch(p -> p.getProduct().getId() == idProducto);
+		Integer idProduct = product.getId();
+		boolean joined = details.stream().anyMatch(p -> p.getProduct().getId() == idProduct);
 		
-		if (!ingresado) {
+		if (!joined) {
 			details.add(orderDetail);
 		}
 		
@@ -93,11 +89,11 @@ public class HomeController {
 		model.addAttribute("cart", details);
 		model.addAttribute("order", order);
 		
-		return "user/carrito";
+		return "user/shoppingcart";
 	}
 
 	@GetMapping("/delete/cart/{id}")
-	public String deleteProductoCart(@PathVariable Integer id, Model model) {
+	public String deleteProductCart(@PathVariable Integer id, Model model) {
 		List<OrderDetail> newOrders = new ArrayList<>();
 		
 		for (OrderDetail orderDetail : details) {
@@ -122,19 +118,19 @@ public class HomeController {
 	public String getCart(Model model, HttpSession session) {
 		model.addAttribute("cart", details);
 		model.addAttribute("order", order);
-		model.addAttribute("sesion", session.getAttribute("idusuario"));
-		return "/user/carrito";
+		model.addAttribute("session", session.getAttribute("iduser"));
+		return "user/shoppingcart";
 	}
 	
 	@GetMapping("/order")
 	public String order(Model model, HttpSession session) {
-		User user = userService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+		User user = userService.findById(Integer.parseInt(session.getAttribute("iduser").toString())).get();
 		
 		model.addAttribute("cart", details);
-		model.addAttribute("orden", order);
-		model.addAttribute("usuario", user);
+		model.addAttribute("order", order);
+		model.addAttribute("user", user);
 		
-		return "user/resumenorden";
+		return "user/summaryorder";
 	}
 	
 	@GetMapping("/saveOrder")
@@ -143,7 +139,7 @@ public class HomeController {
 		order.setCreationDate(creationDate);
 		order.setNumber(orderService.generateOrderNumber(10000));
 		 
-		User user = (User) userService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+		User user = (User) userService.findById(Integer.parseInt(session.getAttribute("iduser").toString())).get();
 		order.setUser(user);
 		orderService.save(order);
 		
@@ -161,9 +157,9 @@ public class HomeController {
 	}
 	
 	@PostMapping("/search")
-	public String searchProduct(@RequestParam String nombre, Model model) {
-		List<Product> products = productService.findAll().stream().filter(p -> p.getName().contains(nombre.toLowerCase() )).collect(Collectors.toList());
-		model.addAttribute("productos", products);
+	public String searchProduct(@RequestParam String name, Model model) {
+		List<Product> products = productService.findAll().stream().filter(p -> p.getName().contains(name.toLowerCase() )).collect(Collectors.toList());
+		model.addAttribute("products", products);
 		return "user/home";
 	}
 }

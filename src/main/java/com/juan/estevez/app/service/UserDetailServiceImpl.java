@@ -19,16 +19,13 @@ public class UserDetailServiceImpl implements UserDetailsService{
 	private IUserService userService;
 	
 	@Autowired
-	private BCryptPasswordEncoder bCrypt;
-	
-	@Autowired
 	HttpSession session;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<com.juan.estevez.app.model.User> optionalUser = userService.findByEmail(username);
 		if (optionalUser.isPresent()) {
-			session.setAttribute("idusuario", optionalUser.get().getId());
+			session.setAttribute("iduser", optionalUser.get().getId());
 			com.juan.estevez.app.model.User user = optionalUser.get();
 			return User.builder().username(user.getName()).password(user.getPassword()).roles(user.getType()).build();
 		}else {
