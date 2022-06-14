@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,8 @@ public class UserController {
 	@Autowired
 	private IOrderService orderService;
 	
+	BCryptPasswordEncoder passEncode = new BCryptPasswordEncoder();
+	
 	@GetMapping("/registration")
 	public String create() {
 		return "user/registro";
@@ -36,6 +39,7 @@ public class UserController {
 	@PostMapping("/save")
 	public String save(User user) {
 		user.setType("USER");
+		user.setPassword(passEncode.encode(user.getPassword())); 
 		userService.save(user);
 		return "redirect:/";
 	}
@@ -45,9 +49,9 @@ public class UserController {
 		return "user/login";
 	}
 	
-	@PostMapping("/acceder")
+	@GetMapping("/acceder")
 	public String acceder(User user, HttpSession session) {
-		Optional<User> usuario = userService.findByEmail(user.getEmail());
+		Optional<User> usuario = userService.findById(Integer.parseInt(session.getAttribute("idusuario").toString()));
 		
 		if(usuario.isPresent()) {
 			session.setAttribute("idusuario", usuario.get().getId());

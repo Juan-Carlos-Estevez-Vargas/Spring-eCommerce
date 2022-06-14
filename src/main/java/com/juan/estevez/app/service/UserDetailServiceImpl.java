@@ -30,7 +30,7 @@ public class UserDetailServiceImpl implements UserDetailsService{
 		if (optionalUser.isPresent()) {
 			session.setAttribute("idusuario", optionalUser.get().getId());
 			com.juan.estevez.app.model.User user = optionalUser.get();
-			return User.builder().username(user.getName()).password(bCrypt.encode(user.getPassword())).roles(user.getType()).build();
+			return User.builder().username(user.getName()).password(user.getPassword()).roles(user.getType()).build();
 		}else {
 			throw new UsernameNotFoundException("Usuario no encontrado");
 		}
