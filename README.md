@@ -1,14 +1,14 @@
-# spring-ecommerce
+# Spring eCommerce
 Curso spring ecommerce básico
 
 Proyecto Spring Framework, Spring Boot, Servicios REST, Thymeleaf, Spring MVC, Spring Data JPA, Spring Security y deployment en Digital Ocean
 
 El proyecto cuenta con dos roles en específico.
 
-## Administrador.
+* ## Administrador.
 Es quien puede editar la información de los productos, cargarlos al sistema, eliminarlos, etc; también, es quien se encarga de gestionar los usuarios.
 
-## Cliente.
+* ## Cliente.
 Es la persona la cual puede visualizar los productos que desea comprar, buscarlos en la barra de búsqueda, añadir los productos al carrito de compras, eliminarlos del carrito y finalmente generar la orden de compra.
 
 Curso en Youtube: https://www.youtube.com/playlist?list=PL3vxkSlW2FvU9z7Gz_Nn3E69HjEvv55_G
